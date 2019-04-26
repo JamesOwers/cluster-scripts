@@ -55,6 +55,69 @@ s1234456  Bob smith           2
 s8765423  Joe Bloggs          1
 ```
 
+* Get information about jobs running on a node
+```
+jobinfo -n charles04
+> JobId=452332 JobName=...
+>    UserId=... GroupId=... MCS_label=N/A
+>    Priority=1027 Nice=0 Account=... QOS=normal
+>    JobState=RUNNING Reason=None Dependency=(null)
+>    Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+>    RunTime=9-10:22:17 TimeLimit=UNLIMITED TimeMin=N/A
+>    SubmitTime=2019-04-17T12:18:35 EligibleTime=2019-04-17T12:18:35
+>    StartTime=2019-04-17T12:18:35 EndTime=Unknown Deadline=N/A
+>    PreemptTime=None SuspendTime=None SecsPreSuspend=0
+>    LastSchedEval=2019-04-17T12:18:35
+>    Partition=cdtgpucluster AllocNode:Sid=albert:82878
+>    ReqNodeList=(null) ExcNodeList=(null)
+>    NodeList=charles04
+>    BatchHost=charles04
+>    NumNodes=1 NumCPUs=2 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+>    TRES=cpu=2,mem=14000M,node=1,billing=2,gres/gpu=1
+>    Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+>    MinCPUsNode=1 MinMemoryNode=14000M MinTmpDiskNode=0
+>    Features=(null) DelayBoot=00:00:00
+>    Gres=gpu:1 Reservation=(null)
+>    OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+>    Command=...
+>    WorkDir=...
+>    StdErr=...
+>    StdIn=/dev/null
+>    StdOut=...
+>    Power=
+```
+
+* Kill all your jobs
+```
+# Launch some jobs
+some_script=/mnt/cdtds_cluster_home/s0816700/git/melody_gen/scripts/slurm_blankjob.sh
+for ii in {1..8}; do 
+  sbatch --time=05:00 --nodelist=charles01 --cpus-per-task=8 --mem=2000 $some_script 100
+done
+```
+
+```
+# Kill em
+killmyjobs
+> killing jobs in queue as well as running jobs
+> killing 454218 454219 454220 454221 454214 454215 454216 454217
+```
+
+or
+
+```
+# Only kill ones running (leave ones in queue alone)
+killmyjobs -g
+> not killing jobs in queue
+> killing 454206 454207 454208 454209
+```
+
+* Run a job on every node in the cluseter - useful for something like changing data on scratch spaces
+```
+some_script=/mnt/cdtds_cluster_home/s0816700/git/melody_gen/scripts/slurm_diskspace.sh
+onallnodes $some_script
+```
+
 The scripts in the gridengine directory are from the previous scheduler sytem, and won't work with SLURM.
 
 ## Setup
