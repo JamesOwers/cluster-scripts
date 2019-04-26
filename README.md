@@ -1,6 +1,11 @@
 # Useful scripts for the CDT cluster
 
-Scripts in the root directory use slurm commands and their outputs to get cluster status in a nice format.
+A collection of scripts for:
+* getting the status of the cluster: `cluster-status`, `gpu-usage`, `free-gpus`, `down-gpus`, `whoson`
+* information about running jobs: `jobinfo`, `longbois`
+* and aiding your job submission: `killmyjobs`, `onallnodes`
+
+They mainly just parse the output of slurm commands, so should be easy to read and understand. The [documentation for slurm](https://slurm.schedmd.com/), in particular the [man pages](https://slurm.schedmd.com/man_index.html), explain all the options.
 
 ## Setup
 
