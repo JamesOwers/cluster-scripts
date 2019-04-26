@@ -1,6 +1,27 @@
 # Useful scripts for the CDT cluster
 
 Scripts in the root directory use slurm commands and their outputs to get cluster status in a nice format.
+
+## Setup
+
+Place these scripts in a folder and add that folder to your path e.g.
+
+```{bash}
+cd ~
+mkdir git
+cd git
+git clone https://github.com/cdt-data-science/cluster-scripts.git
+echo "export PATH=/home/$USER/git/cluster-scripts:\$PATH" >> ~/.bashrc
+source ~/.bashrc
+```
+
+If instead of cloning the repo, you copied the files to a directory manually, make sure they are executable:
+```{bash}
+chmod u+x {cluster-status,down-gpus,free-gpus,gpu-usage,gpu-usage-by-node,whoson} 
+```
+
+You should now be able to run the scripts from anywhere when on the cluster.
+
 ## Examples
 
 * Quickly identify free gpus for use
@@ -119,23 +140,3 @@ onallnodes $some_script
 ```
 
 The scripts in the gridengine directory are from the previous scheduler sytem, and won't work with SLURM.
-
-## Setup
-
-Place these scripts in a folder and add that folder to your path e.g.
-
-```{bash}
-cd ~
-mkdir git
-cd git
-git clone https://github.com/cdt-data-science/cluster-scripts.git
-echo "export PATH=/home/$USER/git/cluster-scripts:\$PATH" >> ~/.bashrc
-source ~/.bashrc
-```
-
-If instead of cloning the repo, you copied the files to a directory manually, make sure they are executable:
-```{bash}
-chmod u+x {cluster-status,down-gpus,free-gpus,gpu-usage,gpu-usage-by-node,whoson} 
-```
-
-You should now be able to run the scripts from anywhere when on the cluster.
