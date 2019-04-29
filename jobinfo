@@ -13,12 +13,18 @@ Arguments
 EOM
 }
 
-while getopts 'n:' flag; do
+while getopts 'n:u:' flag; do
   case "${flag}" in
     n) nodes="${OPTARG}" ;;
+    u) user="${OPTARG}" ;;
     *) print_usage
        exit ;;
   esac
 done
 
-squeue --nodelist=${nodes} -o"%i" --noheader | xargs -I {} sh -c 'scontrol show JobId={}'
+if [ -n "${user}" ]; then
+    user_arg="--user=${user}"
+else
+    user_arg=""
+fi
+squeue --nodelist=${nodes} -o"%i" --noheader ${user_arg} | xargs -I {} sh -c 'scontrol show JobId={}'
