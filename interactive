@@ -9,6 +9,8 @@ We have added some default parameters to maximise your chance
 of getting an interactive session. See the Slurm Documentation
 for further info.
 
+https://slurm.schedmd.com/
+
 Default args added:
 [$default_args]
 
@@ -22,8 +24,13 @@ Useful arg examples:
 * --mem=4000             give me 4G of RAM, there's about 50G
                          per box but memory is not shared 
                          (note this is not GPU memory)
-* --cpus-per-task=1      give me 1 cpu, there's 16 on each
-                         node but these are shared
+* --cpus-per-task=1      give me 1 cpu, there's 32 on most
+                         nodes
+
+For more informtion about node configuration, see the
+computing support docs:
+http://computing.help.inf.ed.ac.uk/james-and-charles-cluster
+
 
 When you run this command with args, this message will
 disappear, and no additional args will be added.
