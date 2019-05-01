@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+log_file="$1"
+log_period="$2"
+script="$3"
+script_args="${@:4}"
+while :
+do
+  $script $script_args >> $log_file
+  sleep $log_period
+done
