@@ -4,8 +4,10 @@ log_file="$1"
 log_period="$2"
 script="$3"
 script_args="${@:4}"
+
 while :
 do
-  $script $script_args >> $log_file
+  dt=$(date '+%d-%m-%Y_%H-%M-%S');
+  $script $script_args > ${log_file}__${dt}.txt
   sleep $log_period
 done
