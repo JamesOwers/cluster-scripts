@@ -70,7 +70,7 @@ whoson_df = pd.concat(df_list, axis=0)
 fig = plt.figure(figsize=(12, 4))
 df = whoson_df[['name', 'running']].reset_index().pivot(index='datetime', columns='name')
 # df.plot(ax=plt.gca())
-df.plot.area(ax=plt.gca())
+df.plot.area(ax=plt.gca(), linewidth=0))
 # lines = plt.gca().get_lines()
 # for ii, line in enumerate(lines):
 #     linestyle = [':', '-.', '--'][ii//10]
