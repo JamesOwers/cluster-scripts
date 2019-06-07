@@ -27,7 +27,7 @@ Useful arg examples:
 * --cpus-per-task=1      give me 1 cpu, there's 32 on most
                          nodes
 * --partition=...        there is a partition explicitly for
-                         interactive jobs (called Partition).
+                         interactive jobs (called Interactive).
                          You are welcome to run interactive
                          jobs on other partitions if the
                          Interactive partition is full. To
