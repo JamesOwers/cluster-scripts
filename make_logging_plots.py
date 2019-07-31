@@ -78,8 +78,9 @@ df.plot.area(ax=plt.gca(), linewidth=0)
 #     line.set_alpha(.95)
 polys = [pp for pp in plt.gca().get_children() if isinstance(pp, matplotlib.collections.PolyCollection)]
 ax = plt.gca()
+HATCHES = [None, '//', '\\\\', '-', '.', '+', '*', 'x', 'o', 'O']
 for ii, poly in enumerate(polys):
-    hatch = [None, '//', '\\\\'][ii//10]
+    hatch = HATCHES[ii//10 % len(HATCHES)]
     poly.set_edgecolor('k')
     poly.set_linewidth(0)
     poly.set_hatch(hatch)
