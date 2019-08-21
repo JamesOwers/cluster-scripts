@@ -75,7 +75,7 @@ for ff in whoson_files:
     df.set_index('datetime', inplace=True)
     df_list += [df]
 
-whoson_df = pd.concat(df_list, axis=0)
+whoson_df = pd.concat(df_list, axis=0, sort=True)
 fig = plt.figure(figsize=(12, 4))
 df = whoson_df[['name', 'running']].reset_index().pivot(index='datetime', columns='name')
 # df.plot(ax=plt.gca())
