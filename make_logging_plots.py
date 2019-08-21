@@ -57,6 +57,14 @@ for ff in whoson_files:
         print(df)
         print(df.dtypes)
         continue
+    except KeyError as e:
+        try:
+            split_cols = df['GPUs(running/pending/total)'].str.split('/', expand=True)
+        except KeyError as e:
+            print(f'WARNING: import failed for: {ff}')
+            print(df)
+            print(df.dtypes)
+            continue
     df['running'] = split_cols[0].astype('int')
     df['pending'] = split_cols[1].astype('int')
     df['total'] = split_cols[2].astype('int')
@@ -66,6 +74,7 @@ for ff in whoson_files:
     )
     df.set_index('datetime', inplace=True)
     df_list += [df]
+
 whoson_df = pd.concat(df_list, axis=0)
 fig = plt.figure(figsize=(12, 4))
 df = whoson_df[['name', 'running']].reset_index().pivot(index='datetime', columns='name')
