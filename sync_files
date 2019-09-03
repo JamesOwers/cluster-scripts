@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+sync_frequency="$3"
+sync_to="$2"
+sync_from="$1"
+
+while :
+do
+  rsync -avzh $sync_from $sync_to 
+  sleep $sync_frequency
+done
+
