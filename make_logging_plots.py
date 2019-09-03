@@ -17,17 +17,21 @@ log_home = os.path.expanduser('~/logging')
 gpu_usage_files = glob(f'{log_home}/gpu-usage__*.txt')
 df_list = []
 for ff in gpu_usage_files:
-    df = pd.read_csv(ff, header=None, names=['in_use', 'usable', 'total'])
+    df = pd.read_csv(ff, header=None)
+    if df.shape[1] == 3:
+        df.columns = ['in_use', 'usable', 'total']
+    elif df.shape[1] == 4:
+        df.columns = ['in_use', 'usable', 'total', 'free']
     df['datetime'] = pd.to_datetime(
         ff.split('__')[-1].split('.')[0],
         format='%d-%m-%Y_%H-%M-%S'
     )
     df.set_index('datetime', inplace=True)
     df_list += [df]
-gpu_usage_df = pd.concat(df_list, axis=0)
+gpu_usage_df = pd.concat(df_list, axis=0, sort=False)
 gpu_usage_df.sort_index(inplace=True)
 plt.figure(figsize=(12, 4))
-gpu_usage_df.plot(ax=plt.gca())
+gpu_usage_df[['in_use', 'usable', 'total']].plot(ax=plt.gca())
 lines = plt.gca().get_lines()
 usable = lines[1]
 usable.set_linestyle('--')
@@ -61,6 +65,11 @@ for ff in whoson_files:
         try:
             split_cols = df['GPUs(running/pending/total)'].str.split('/', expand=True)
         except KeyError as e:
+            print(f'WARNING: import failed for: {ff}')
+            print(df)
+            print(df.dtypes)
+            continue
+        except AttributeError as e:
             print(f'WARNING: import failed for: {ff}')
             print(df)
             print(df.dtypes)
