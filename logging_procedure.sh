@@ -7,4 +7,5 @@ log /home/s0816700/logging/user-usage 3600 make_logging_plots.py &
 log /home/s0816700/logging/sprio 3600 sprio -l &
 log /home/s0816700/logging/squeue 3600 squeue -r &
 log /home/s0816700/logging/free-gpus 3600 free-gpus &
+sync_files "$HOME/logging/*" "/disk/scratch/logging" 900
 sleep infinity
