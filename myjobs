@@ -1,2 +1,4 @@
-#!/usr/bin/env bash
-squeue -u $USER
+#!/bin/bash
+
+squeue -u ${USER}
+
