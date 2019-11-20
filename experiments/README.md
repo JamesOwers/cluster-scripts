@@ -1,10 +1,10 @@
 # Templates for running experiments with slurm
-These templates and accompanying wrapper function `run_experiment.sh`
+These templates and accompanying wrapper function `run_experiment`
 facilitate a simple framework for running batches of commands:
 1. Make a file which contains a command to run on each line
 2. Run every line in that file in parallel using a slurm `sbatch --array...`
 
-The script `run_experiment.sh` is essentially a wrapper for the slurm command
+The script `run_experiment` is essentially a wrapper for the slurm command
 `sbatch --array...`. It sets off all the jobs to run in parallel when you give
 it:
 1. *a text file* containing all the experiments you want to run, one experiment
@@ -23,40 +23,40 @@ project e.g. different grid searches over parameters, investigating
 different models, or running all your baselines.
 
 
-## Quickstart
-For a fuller explanation of these steps, see below or check out the
-`./example` directory for a full worked example.
-
-1. add scripts in this directory to your path (essentially allows you to run
-   `run_experiment.sh` from anywhere)
+## Setup
+Add the script(s) in this directory to your path (essentially allows you to run
+`run_experiment` from anywhere):
 ```
-echo "export PATH=/home/$USER/git/cluster-scripts/slurm_templates:\$PATH" >> ~/.bashrc
+echo "export PATH=/home/$USER/git/cluster-scripts/experiments:\$PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
-2. copy the bash script template to your project's home directory and customise
-   it for your use (i.e. fill in your own paths, change the data `rsync` etc.).
-   An example is given here:
-   [example/slurm_arrayjob.sh](example/slurm_arrayjob.sh)
+
+## Quickstart
+For a fuller explanation of these steps, see below or check out the
+`./examples` directory for fully worked examples. The below explains usage of
+the template:
+
+1. follow the setup above
+2. copy `slurm_arrayjob.sh.template` to your project's home directory and
+   customise it for your use:
 ```
 code_dir=your/project/home/dir
 cp slurm_arrayjob.sh.template ${code_dir}/slurm_arrayjob.sh
 vim ${code_dir}/slurm_arrayjob.sh
 ```
 3. create an experiment file; each line contains a command to execute which
-   will run one of your experiments. Protip: it will likely be easiest, not to
-   mention facilitate reproducibility, if you whip up a script which will
-   generate this file for you (there's an example in the `example` directory)
+   will run one of your experiments:
 ```
 python ${code_dir}/gen_experiments.py
 ls ${code_dir}
-    ...
-    experiments.txt
-    ...
+>    ...
+>    experiments.txt
+>    ...
 ```
 4. run your experiment! e.g.
 ```
-run_experiment.sh -t ${code_dir}/slurm_arrayjob.sh \\
-    -e ${code_dir}/experiments.txt \\
+run_experiment -b ${code_dir}/slurm_arrayjob.sh \
+    -e ${code_dir}/experiments.txt \
     -m 12 --cpus-per-task=4 --gres=gpu:1 --mem=8000
 ```
 
@@ -68,7 +68,7 @@ In this section we explain a little about what's going on under the hood.
 [Slurm](https://slurm.schedmd.com/) is the workload manager which is used on
 most of the GPU clusters in informatics, and elsewhere. For example:
 ```
-ssh ${USER}@cdtcluster.inf.ed.ac.uk  # 
+ssh ${USER}@cdtcluster.inf.ed.ac.uk
 ssh ${USER}@mlp.inf.ed.ac.uk
 ssh ${USER}@ilcc-cluster.inf.ed.ac.uk
 ```
