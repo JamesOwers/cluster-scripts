@@ -19,8 +19,7 @@ Firstly, if you haven't already, clone this repository, following the
 [base README.md](../../../README.md) installation instructions.
 
 Next, make sure you have made `run_experiment` available by running the
-setup instructions in the [slurm experiments README](../../README.md) in 
-the base directory for slurm experiments.
+setup instructions in the [slurm experiments README](../../README.md).
 
 **IMPORTANT NOTE:** Running processes locally i.e. here on the headnode (the
 node you arrive at when you ssh to a given cluster) is **VERY BAD**! The
@@ -35,6 +34,9 @@ ssh ${USER}@${cluster_name}.inf.ed.ac.uk
 # Run this slurm command to be allocated to a node in the default partition
 # We have set a maximum time and a few other constraints:
 srun --time=02:00:00 --mem=4000 --cpus-per-task=1 --pty bash
+
+# You can also use our shortcut command which essentially does the above!
+interactive
 ```
 
 When you are finished, execute the `exit` command to return to the headnode.
@@ -102,8 +104,8 @@ Again have a look at the file you're going to run (either on the server with
 e.g. `cat gen_experiment.py` or in your browser
 [gen_experiment.py](gen_experiment.py)).
 
-In your terminal, change the directory to here, and run the script to make
-the experiment file. Have a look at the file!
+In your terminal, change directory as below, run the script to make
+the experiment file, and a look at the file:
 ```
 cd $repo_dir/experiments/examples/simple
 python3 gen_experiment.py
@@ -133,8 +135,9 @@ it is sent to. We are going to use it in 'array mode'.
 
 We need to make a bash script which:
 1. configures any slurm options we want to use
-1. moves data from the DFS to the node we're on to the scratch space of the
-   node we are allocated
+1. moves data from the Distributed File System (DFS - available on all nodes)
+   to the scratch space of the node slurm has allocated the job to (e.g.
+   `/disk/scratch` - which is only available on this specific node)
 1. runs one of the lines in experiments.txt
 
 You're in luck, because we have made you just such a script! Have a look at
@@ -185,7 +188,7 @@ tail -n +1 data/output/*  # a little trick to print filenames and file contents
 
 You can delete your logs easily using:
 ```
-rm slurm-*.log
+rm slurm-*.out
 ```
 
 
@@ -221,7 +224,8 @@ rm slurm-*.log
     `/home/${USER}/git/cluster-scripts/experiments/examples/simple/data/input.zip`
     points to the distributed filesystem whichever node you are on
 1. where does the python script read the data from?
-    * The scratch node of node which the job gets allocated to
+    * The scratch space of node which the job gets allocated to e.g. the path
+    `/disk/scratch/${USER}/...` which is only accessible from this node
 1. how did the data get there?
     * In slurm_arrayjob.sh, `rsync` moves the zip file over, and `unzip`
     unzips the zip file
@@ -240,11 +244,12 @@ rm slurm-*.log
     of the node, but the amalgamated outputs are sent back to the DFS. The
     last part of `slurm_arrayjob.sh` moves the data back to the DFS.
 1. what happens to the output data if you do a second run of the experiment?
-    * The scratch disk of each node will now have two files inside. However,
-    when rsync looks at these two files and compares them with the files on the
-    DFS, it will decide to only send the one newer file (as the older file on
-    scratch will either be unchanged on the DFS, or a newer file will already
-    exist on the DFS)
+    * The scratch disk of each node may now have two files inside (it's
+    possible the same experiment will get sent to the same node again, and the
+    output file will simply be overwritten). However, when rsync looks at these
+    two files and compares them with the files on the DFS, it will decide to
+    only send the one newer file (as the older file on scratch will either be
+    unchanged on the DFS, or a newer file will already exist on the DFS)
 1. how does the script run different lines of experiment.txt?
     * The script takes one argument as input - the path to the experiment file.
     It uses the slurm environment variable ${SLURM_ARRAY_TASK_ID} - if you
